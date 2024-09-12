@@ -4,5 +4,5 @@ import domain.models.Currency
 import domain.models.RequestState
 
 interface CurrencyRepository {
-    suspend fun getLatestExchangeRates(): RequestState<List<Currency>>
+    suspend fun getLatestExchangeRates(): Pair<RequestState<List<Currency>>, String>
 }
