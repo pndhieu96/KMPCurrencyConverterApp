@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -42,7 +43,7 @@ fun HomeHeader(status: RateStatus, onRateRefresh: () -> Unit) {
             .background(headerColor)
             .padding(all = 24.dp)
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         RateStatus(
             status = status,
             onRateRefresh = onRateRefresh
@@ -60,32 +61,34 @@ fun RateStatus(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Image(
-            modifier = Modifier.size(50.dp),
-            painter = painterResource(Res.drawable.exchange_illustration),
-            contentDescription = "Exchange Rate Illustration"
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        Column {
-            Text(
-                text = displayCurrentDateTime(),
-                color = Color.White
+        Row {
+            Image(
+                modifier = Modifier.size(50.dp),
+                painter = painterResource(Res.drawable.exchange_illustration),
+                contentDescription = "Exchange Rate Illustration"
             )
-            Text(
-                text = status.title,
-                fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                color = status.color
-            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Column {
+                Text(
+                    text = displayCurrentDateTime(),
+                    color = Color.White
+                )
+                Text(
+                    text = status.title,
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                    color = status.color
+                )
+            }
         }
-    }
-    if(status == RateStatus.Stale) {
-        IconButton(onClick = onRateRefresh) {
-            Icon(
-                modifier = Modifier.size(24.dp),
-                painter = painterResource(Res.drawable.refresh_ic),
-                contentDescription = "Refresh Icon",
-                tint = staleColor
-            )
+        if(status == RateStatus.Stale) {
+            IconButton(onClick = onRateRefresh) {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    painter = painterResource(Res.drawable.refresh_ic),
+                    contentDescription = "Refresh Icon",
+                    tint = staleColor
+                )
+            }
         }
     }
 }
