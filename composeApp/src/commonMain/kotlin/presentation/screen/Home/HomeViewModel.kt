@@ -4,6 +4,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import domain.models.Currency
+import domain.models.RequestState
 import domain.usecases.GetAvailableCurrencyUseCase
 import domain.usecases.ValidateFreshCurrencyDataUseCase
 import kotlinx.coroutines.launch
@@ -17,8 +19,14 @@ class HomeViewModel(
     private val getAvailableCurrencyUseCase: GetAvailableCurrencyUseCase,
     private val validateFreshCurrencyDataUseCase: ValidateFreshCurrencyDataUseCase
 ) : ScreenModel {
-    private var _rateStatus = mutableStateOf(RateStatus.Idle)
+    private val _rateStatus = mutableStateOf(RateStatus.Idle)
     val rateStatus : State<RateStatus> = _rateStatus
+
+    private val _sourceCurrency = mutableStateOf<RequestState<Currency>> (RequestState.Idle)
+    val sourceCurrency : State<RequestState<Currency>>  = _sourceCurrency
+
+    private val _targetCurrency = mutableStateOf<RequestState<Currency>> (RequestState.Idle)
+    val targetCurrency : State<RequestState<Currency>> = _targetCurrency
 
     init {
         screenModelScope.launch {

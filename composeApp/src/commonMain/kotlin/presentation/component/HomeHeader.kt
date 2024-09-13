@@ -4,9 +4,11 @@ package presentation.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,11 +25,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import domain.models.Currency
+import domain.models.CurrencyCode
+import domain.models.RequestState
 import headerColor
 import kmpsampleproject.composeapp.generated.resources.Res
 import kmpsampleproject.composeapp.generated.resources.exchange_illustration
 import kmpsampleproject.composeapp.generated.resources.refresh_ic
+import kmpsampleproject.composeapp.generated.resources.switch_ic
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.uistate.RateStatus
@@ -35,7 +42,13 @@ import staleColor
 import util.displayCurrentDateTime
 
 @Composable
-fun HomeHeader(status: RateStatus, onRateRefresh: () -> Unit) {
+fun HomeHeader(
+    status: RateStatus,
+    source: RequestState<Currency>,
+    target: RequestState<Currency>,
+    onSwitchClick: () -> Unit,
+    onRateRefresh: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -47,6 +60,12 @@ fun HomeHeader(status: RateStatus, onRateRefresh: () -> Unit) {
         RateStatus(
             status = status,
             onRateRefresh = onRateRefresh
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        CurrencyInputs(
+            source = source,
+            target = target,
+            onSwitchClick = onSwitchClick
         )
     }
 }
@@ -87,6 +106,83 @@ fun RateStatus(
                     painter = painterResource(Res.drawable.refresh_ic),
                     contentDescription = "Refresh Icon",
                     tint = staleColor
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun CurrencyInputs(
+    source: RequestState<Currency>,
+    target: RequestState<Currency>,
+    onSwitchClick: () -> Unit
+) {
+    Row {
+        CurrencyView(
+            placeHolder = "from",
+            currency = source,
+            onClick = {}
+        )
+        Spacer(modifier = Modifier.width(14.dp))
+        IconButton(
+            modifier = Modifier.padding(top = 14.dp),
+            onClick = onSwitchClick
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.switch_ic),
+                contentDescription = "Switch Icon",
+                tint = Color.White
+            )
+        }
+        Spacer(modifier = Modifier.width(14.dp))
+        CurrencyView(
+            placeHolder = "to",
+            currency = target,
+            onClick = {}
+        )
+    }
+}
+
+@Composable
+fun RowScope.CurrencyView(
+    placeHolder: String,
+    currency: RequestState<Currency>,
+    onClick: () -> Unit
+) {
+    Column(modifier = Modifier.weight(1f)) {
+        Text(
+            modifier = Modifier.padding(start = 12.dp),
+            text = placeHolder,
+            fontSize = MaterialTheme.typography.bodySmall.fontSize,
+            color = Color.White
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp))
+                .background(Color.White.copy(alpha = 0.05f))
+                .height(54.dp)
+                .clickable { onClick() },
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ){
+            if(currency.isSuccess()) {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    painter = painterResource(
+                        CurrencyCode.valueOf(currency.getSuccessData().code).flag
+                    ),
+                    tint = Color.Unspecified,
+                    contentDescription = "Country Flag"
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = CurrencyCode.valueOf(currency.getSuccessData().code).name,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                    color = Color.White
                 )
             }
         }
