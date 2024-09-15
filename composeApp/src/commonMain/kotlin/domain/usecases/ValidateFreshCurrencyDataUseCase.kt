@@ -1,14 +1,13 @@
 package domain.usecases
 
-import domain.repositories.PreferencesRepository
+import domain.repository_Interfaces.UpdatedTimeRepository
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
 class ValidateFreshCurrencyDataUseCase(
-    private val preferencesRepository: PreferencesRepository
+    private val preferencesRepository: UpdatedTimeRepository
 ) {
     suspend operator fun invoke() : Boolean {
         val updatedTime = preferencesRepository.getLastUpdatedTime()

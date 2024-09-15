@@ -5,14 +5,14 @@ import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.coroutines.FlowSettings
 import com.russhwolf.settings.coroutines.toFlowSettings
-import domain.repositories.PreferencesRepository
+import domain.repository_Interfaces.UpdatedTimeRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.datetime.Instant
 
 @OptIn(ExperimentalSettingsApi::class)
-class PreferencesRepositoryImpl(
+class PreferencesUpdateTimeRepositoryImpl(
     private val settings: Settings
-) : PreferencesRepository {
+) : UpdatedTimeRepository {
     companion object {
         const val TIMESTAMP_KEY = "lastUpdated"
     }

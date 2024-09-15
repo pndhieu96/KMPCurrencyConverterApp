@@ -1,6 +1,6 @@
-package domain.repositories
+package domain.repository_Interfaces
 
-interface PreferencesRepository {
+interface UpdatedTimeRepository {
     suspend fun saveLastUpdatedTime(lastUpdated: String)
     suspend fun getLastUpdatedTime(): Long
 }

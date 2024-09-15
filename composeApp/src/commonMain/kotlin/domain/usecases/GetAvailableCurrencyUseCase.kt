@@ -2,20 +2,20 @@ package domain.usecases
 
 import domain.models.Currency
 import domain.models.RequestState
-import domain.repositories.CurrencyRepository
-import domain.repositories.PreferencesRepository
+import domain.repository_Interfaces.ApiCurrencyRepository
+import domain.repository_Interfaces.LocalCurrencyRepository
+import domain.repository_Interfaces.UpdatedTimeRepository
 
 class GetAvailableCurrencyUseCase(
-    private val currencyRepository: CurrencyRepository,
-    private val preferencesRepository: PreferencesRepository
+    private val apiCurrencyRepository: ApiCurrencyRepository,
+    private val updateTimeRepository: UpdatedTimeRepository
+
 ) {
     suspend operator fun invoke(): RequestState<List<Currency>> {
-        val (requestState, latestUpdateTime) = currencyRepository.getLatestExchangeRates()
-
-
+        val (requestState, latestUpdateTime) = apiCurrencyRepository.getLatestExchangeRates()
 
         if(latestUpdateTime.isNotEmpty()) {
-            preferencesRepository.saveLastUpdatedTime(latestUpdateTime)
+            updateTimeRepository.saveLastUpdatedTime(latestUpdateTime)
         }
         return requestState
     }

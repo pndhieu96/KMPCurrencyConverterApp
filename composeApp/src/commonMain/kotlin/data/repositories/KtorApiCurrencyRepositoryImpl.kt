@@ -5,20 +5,19 @@ import data.remote.api.CurrencyApiService
 import domain.models.Currency
 import domain.models.CurrencyCode
 import domain.models.RequestState
-import domain.repositories.CurrencyRepository
-import domain.repositories.PreferencesRepository
+import domain.repository_Interfaces.ApiCurrencyRepository
 
-class CurrencyRepositoryImpl(
+class KtorApiCurrencyRepositoryImpl(
     private val service: CurrencyApiService,
     private val dataMapper: DataMapper
-) : CurrencyRepository {
+) : ApiCurrencyRepository {
 
     override suspend fun getLatestExchangeRates(): Pair<RequestState<List<Currency>>, String> {
         return try {
             val response = service.getLatestExchangeRates()
 
             val currencyList = response.data.values.map {
-                dataMapper.mapCurrency(it)
+                dataMapper.mapCurrencyApiDateToCurrency(it)
             }
 
             val availableCurrencyCodes = response.data.keys.filter {
