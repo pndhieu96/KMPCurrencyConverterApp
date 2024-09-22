@@ -4,12 +4,14 @@ import data.local.realm_object.CurrencyRO
 import data.remote.models.CurrencyApiData
 import data.remote.models.CurrencyApiResponse
 import domain.models.Currency
+import org.mongodb.kbson.ObjectId
 
 class DataMapper {
     fun mapCurrencyApiDateToCurrency(currencyApiData: CurrencyApiData): Currency {
         return Currency(
             code = currencyApiData.code,
-            value = currencyApiData.value
+            value = currencyApiData.value,
+            id = ""
         )
     }
     fun mapCurrencyToCurrencyRO(currency: Currency): CurrencyRO {
@@ -21,7 +23,8 @@ class DataMapper {
     fun mapCurrencyROToCurrency(currencyRO: CurrencyRO): Currency {
         return Currency(
             code = currencyRO.code,
-            value = currencyRO.value
+            value = currencyRO.value,
+            id = currencyRO._id.toHexString()
         )
     }
 }

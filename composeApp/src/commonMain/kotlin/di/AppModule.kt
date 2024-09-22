@@ -17,6 +17,8 @@ import domain.usecases.InsertLocalCurrencyDataUseCase
 import domain.usecases.ReadLocalCurrencyDataUseCase
 import domain.usecases.ReadSourceCurrencyCodeUseCase
 import domain.usecases.ReadTargetCurrencyCodeUseCase
+import domain.usecases.SaveSourceCurrencyCodeUseCase
+import domain.usecases.SaveTargetCurrencyCodeUseCase
 import domain.usecases.ValidateFreshCurrencyDataUseCase
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
@@ -37,15 +39,19 @@ val appModule = module {
     single { ReadLocalCurrencyDataUseCase(get()) }
     single { ReadSourceCurrencyCodeUseCase(get()) }
     single { ReadTargetCurrencyCodeUseCase(get()) }
+    single { SaveSourceCurrencyCodeUseCase(get()) }
+    single { SaveTargetCurrencyCodeUseCase(get()) }
     factory {
         HomeViewModel(
             getAvailableCurrencyUc = get(),
             validateFreshCurrencyDataUc = get(),
-            cleanUpLocalCurrencyDataUseCase = get(),
+            cleanUpLocalCurrencyDataUC = get(),
             insertLocalCurrencyDataUC = get(),
             readLocalCurrencyDataUC = get(),
-            readTargetCurrencyCodeUseCase = get(),
-            readSourceCurrencyCodeUseCase = get()
+            readSourceCurrencyCodeUC = get(),
+            readTargetCurrencyCodeUC = get(),
+            saveSourceCurrencyCodeUC = get(),
+            saveTargetCurrencyCodeUC = get()
         )
     }
 }

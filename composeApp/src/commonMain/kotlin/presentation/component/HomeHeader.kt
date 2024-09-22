@@ -41,7 +41,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ClipOp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.TextStyle
@@ -59,7 +58,8 @@ import kmpsampleproject.composeapp.generated.resources.refresh_ic
 import kmpsampleproject.composeapp.generated.resources.switch_ic
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import presentation.uistate.RateStatus
+import presentation.model.CurrencyType
+import presentation.model.RateStatus
 import staleColor
 import util.displayCurrentDateTime
 
@@ -71,7 +71,8 @@ fun HomeHeader(
     amount: Double,
     onAmountChange: (Double) -> Unit,
     onSwitchClick: () -> Unit,
-    onRateRefresh: () -> Unit
+    onRateRefresh: () -> Unit,
+    onCurrencyTypeSelect: (CurrencyType) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -89,7 +90,8 @@ fun HomeHeader(
         CurrencyInputs(
             source = source,
             target = target,
-            onSwitchClick = onSwitchClick
+            onSwitchClick = onSwitchClick,
+            onCurrencyTypeSelect = onCurrencyTypeSelect
         )
         Spacer(modifier = Modifier.height(24.dp))
         AmountInput(
@@ -145,7 +147,8 @@ fun RateStatus(
 fun CurrencyInputs(
     source: RequestState<Currency>,
     target: RequestState<Currency>,
-    onSwitchClick: () -> Unit
+    onSwitchClick: () -> Unit,
+    onCurrencyTypeSelect: (CurrencyType) -> Unit
 ) {
     var animationStarted by remember { mutableStateOf(false) }
     val animatedRotation by animateFloatAsState(
@@ -156,7 +159,17 @@ fun CurrencyInputs(
         CurrencyView(
             placeHolder = "from",
             currency = source,
-            onClick = {}
+            onClick = {
+                if(source.isSuccess()) {
+                    onCurrencyTypeSelect(
+                        CurrencyType.Source(
+                            currencyCode = CurrencyCode.valueOf(
+                                source.getSuccessData().code
+                            )
+                        )
+                    )
+                }
+            }
         )
         Spacer(modifier = Modifier.width(14.dp))
         IconButton(
@@ -179,7 +192,17 @@ fun CurrencyInputs(
         CurrencyView(
             placeHolder = "to",
             currency = target,
-            onClick = {}
+            onClick = {
+                if(target.isSuccess()) {
+                    onCurrencyTypeSelect(
+                        CurrencyType.Target(
+                            currencyCode = CurrencyCode.valueOf(
+                                target.getSuccessData().code
+                            )
+                        )
+                    )
+                }
+            }
         )
     }
 }

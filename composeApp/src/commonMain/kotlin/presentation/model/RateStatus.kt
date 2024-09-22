@@ -1,4 +1,4 @@
-package presentation.uistate
+package presentation.model
 
 import androidx.compose.ui.graphics.Color
 import freshColor
