@@ -13,7 +13,6 @@ import presentation.screen.Home.HomeScreen
 @Composable
 @Preview
 fun App() {
-    initializeKoin()
 
     MaterialTheme {
         Navigator(HomeScreen())

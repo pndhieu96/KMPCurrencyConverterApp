@@ -56,6 +56,7 @@ import kmpsampleproject.composeapp.generated.resources.Res
 import kmpsampleproject.composeapp.generated.resources.exchange_illustration
 import kmpsampleproject.composeapp.generated.resources.refresh_ic
 import kmpsampleproject.composeapp.generated.resources.switch_ic
+import org.example.project.getPlatform
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.model.CurrencyType
@@ -79,14 +80,14 @@ fun HomeHeader(
             .fillMaxWidth()
             .clip(RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp))
             .background(headerColor)
+            .padding(top = if (getPlatform().name == "android") 0.dp else 24.dp)
             .padding(all = 24.dp)
     ) {
-        Spacer(modifier = Modifier.height(12.dp))
         RateStatus(
             status = status,
             onRateRefresh = onRateRefresh
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(24.dp))
         CurrencyInputs(
             source = source,
             target = target,

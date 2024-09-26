@@ -8,6 +8,7 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import domain.models.Currency
 import domain.models.RequestState
+import domain.usecases.CleanUpLocalCurrencyDataUseCase
 import domain.usecases.GetAvailableCurrencyUseCase
 import domain.usecases.InsertLocalCurrencyDataUseCase
 import domain.usecases.ReadLocalCurrencyDataUseCase
@@ -34,7 +35,7 @@ class HomeViewModel(
     private val validateFreshCurrencyDataUc: ValidateFreshCurrencyDataUseCase,
     private val insertLocalCurrencyDataUC: InsertLocalCurrencyDataUseCase,
     private val readLocalCurrencyDataUC: ReadLocalCurrencyDataUseCase,
-    private val cleanUpLocalCurrencyDataUC: ReadLocalCurrencyDataUseCase,
+    private val cleanUpLocalCurrencyDataUC: CleanUpLocalCurrencyDataUseCase,
     private val readSourceCurrencyCodeUC: ReadSourceCurrencyCodeUseCase,
     private val readTargetCurrencyCodeUC: ReadTargetCurrencyCodeUseCase,
     private val saveSourceCurrencyCodeUC: SaveSourceCurrencyCodeUseCase,
@@ -104,6 +105,7 @@ class HomeViewModel(
             if(localCache.isSuccess()) {
                 if(localCache.getSuccessData().isNotEmpty()) {
                     println("HomeViewModel: DATABASE IS FULL")
+                    _allCurrencies.clear()
                     _allCurrencies.addAll(localCache.getSuccessData())
                     if(!validateFreshCurrencyDataUc()) {
                         cacheTheData()
@@ -130,6 +132,7 @@ class HomeViewModel(
             fetchData.getSuccessData().forEach {
                 insertLocalCurrencyDataUC(it)
             }
+            _allCurrencies.clear()
             _allCurrencies.addAll(fetchData.getSuccessData())
         } else if (fetchData.isError()) {
             println("HomeViewModel: ${fetchData.getErrorMessage()}")

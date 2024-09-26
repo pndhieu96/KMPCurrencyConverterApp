@@ -45,9 +45,9 @@ val appModule = module {
         HomeViewModel(
             getAvailableCurrencyUc = get(),
             validateFreshCurrencyDataUc = get(),
-            cleanUpLocalCurrencyDataUC = get(),
             insertLocalCurrencyDataUC = get(),
             readLocalCurrencyDataUC = get(),
+            cleanUpLocalCurrencyDataUC = get(),
             readSourceCurrencyCodeUC = get(),
             readTargetCurrencyCodeUC = get(),
             saveSourceCurrencyCodeUC = get(),

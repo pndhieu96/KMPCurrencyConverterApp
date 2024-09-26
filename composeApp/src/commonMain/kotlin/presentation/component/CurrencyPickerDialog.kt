@@ -35,8 +35,8 @@ import presentation.model.CurrencyType
 import primaryColor
 import surfaceColor
 import textColor
+import kotlin.random.Random
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalStdlibApi::class)
 @Composable
 fun CurrencyPickerDialog(
     currencies: List<Currency>,
@@ -54,6 +54,7 @@ fun CurrencyPickerDialog(
         mutableStateOf(currencyType.code)
     }
 
+    allCurrencies.clear()
     allCurrencies.addAll(currencies)
 
     AlertDialog(
@@ -126,7 +127,11 @@ fun CurrencyPickerDialog(
                         ) {
                             items(
                                 items = availableCurrencies,
-                                key = { it.id }
+                                key = { item ->
+                                    item.id.ifEmpty {
+                                        item.code + Random.nextInt()
+                                    }
+                                }
                             ) { currency ->
                                 CurrencyCodePickerView(
                                     code = CurrencyCode.valueOf(currency.code),

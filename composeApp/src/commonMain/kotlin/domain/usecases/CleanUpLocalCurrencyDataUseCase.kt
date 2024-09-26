@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class CleanUpLocalCurrencyDataUseCase(
     private val localCurrencyRepository: LocalCurrencyRepository
 ) {
-    suspend fun invoke() {
+    suspend operator fun invoke() {
         return localCurrencyRepository.cleanUp()
     }
 }
