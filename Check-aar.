@@ -1,0 +1,26 @@
+$NDK = "C:\Users\<User>\AppData\Local\Android\Sdk\ndk\26.3.11579264\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-readelf.exe"
+$AAR_DIR = ".\aars"
+
+Get-ChildItem -Path $AAR_DIR -Filter *.aar | ForEach-Object {
+    $aar = $_.FullName
+    Write-Host "Checking $aar"
+
+    # Giải nén tạm
+    $tempDir = ".\temp_aar"
+    if (Test-Path $tempDir) { Remove-Item -Recurse -Force $tempDir }
+    New-Item -ItemType Directory -Force -Path $tempDir | Out-Null
+    Expand-Archive -Path $aar -DestinationPath $tempDir -Force
+
+    # Kiểm tra .so
+    Get-ChildItem -Path $tempDir\jni -Recurse -Filter *.so | ForEach-Object {
+        $so = $_.FullName
+        $output = & $NDK -l "$so"
+        if ($output -notmatch "16384") {
+            Write-Host "❌ Not support 16KB: $so" -ForegroundColor Red
+        } else {
+            Write-Host "✅ OK 16KB: $so" -ForegroundColor Green
+        }
+    }
+
+    Remove-Item -Recurse -Force $tempDir
+}
